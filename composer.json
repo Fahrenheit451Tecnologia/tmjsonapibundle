@@ -1,0 +1,26 @@
+{
+    "name": "tm/tm-jsonapi-bundle",
+    "description": "Symfony bundle for rendering responses with JsonApi standard",
+    "type": "symfony-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Fitzpatrick",
+            "email": "fitz@michaelfitzpatrick.co.uk"
+        },
+        {
+            "name": "Time Manager",
+            "homepage": "https://www.timemanagerweb.com/"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "jms/serializer-bundle": "~1.7|~2.0",
+        "jms/di-extra-bundle": "~1.8",
+        "friendsofsymfony/rest-bundle": "~2.2"
+    },
+    "autoload": {
+        "psr-4": {"TM\\JsonApiBundle": ""}
+    },
+    "minimum-stability": "stable"
+}
