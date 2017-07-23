@@ -20,7 +20,7 @@
         "friendsofsymfony/rest-bundle": "~2.2"
     },
     "autoload": {
-        "psr-4": {"TM\\JsonApiBundle": ""}
+        "psr-4": {"TM\\JsonApiBundle\\": ""}
     },
     "minimum-stability": "dev"
 }
