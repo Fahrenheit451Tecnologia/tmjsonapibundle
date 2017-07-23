@@ -22,5 +22,5 @@
     "autoload": {
         "psr-4": {"TM\\JsonApiBundle": ""}
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "dev"
 }
