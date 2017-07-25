@@ -8,7 +8,7 @@ Instalation
 
 1. Include in your project `composer.json` the following dependency:
 
-```yml
+```yaml
 "require": {
         ...
         "tm/tm-jsonapi-bundle": "0.1.1"
@@ -17,7 +17,7 @@ Instalation
 
 2. Add a repository key to your project `composer.json`:
 
-```yml
+```yaml
 "repositories": [
         {
             "type": "git",
@@ -31,6 +31,7 @@ Instalation
 4. Register the bundle and its requirements in the `AppKernel.php` file:
 
 ```php
+<?php
 public function registerBundles()
     {
         $bundles = [
@@ -53,7 +54,7 @@ Configuration
 
 Add the following basic configuration in your project `app/config/config.yml`:
 
-```yml
+```yaml
 fos_rest:
     body_listener: true
     param_fetcher_listener: true
@@ -82,6 +83,80 @@ For more detailed configuration refer to each bundle documentation
 
 Usage
 -----
+
+- Create a REST route and controller following FosRestBundle instructions:
+
+```yaml
+#app/config/routing.yml
+...
+app_api:
+  type: rest
+  prefix: api
+  resource: "@AppBundle/Resources/config/routing.yml"
+```
+
+```yaml
+#src/AppBundle/Resources/config/routing.yml
+api_cats:
+    type: rest
+    resource: "@AppBundle/Controller/CatController.php"
+```
+Controller
+
+```php
+<?php
+...
+    public function getCatsAction()
+    {
+
+        return $this->em
+            ->getRepository(Cat::class)
+            ->findAll();
+    }
+```
+- Create a model and register it as JsonApi
+
+```php
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use TM\JsonApiBundle\Serializer\Configuration\Annotation as JsonApi;
+use JMS\Serializer\Annotation as Serializer;
+
+/**
+ * Class Cat
+ * @package AppBundle\Resources\Entity
+ *
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\CatRepository")
+ * @ORM\Table(name="cats", schema="feline")
+ * @JsonApi\Document(type="cats")
+ * @Serializer\ExclusionPolicy("ALL")
+ *
+ */
+class Cat
+{
+    /**
+     * @ORM\Column(name="id", type="guid", nullable=false)
+     * @ORM\Id()
+     * @ORM\GeneratedValue(strategy="UUID")
+     * @JsonApi\Id()
+     * @Serializer\Expose()
+     * @var
+     */
+    protected $id;
+
+    /**
+     * @ORM\Column(name="name", type="text", nullable=false, length=40)
+     * @Serializer\Expose()
+     * @var
+     */
+    protected $name;
+    
+    // more properties and accessors
+}
+```
 
 Credits
 -------
