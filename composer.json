@@ -15,7 +15,7 @@
     ],
     "require": {
         "php": ">=7.0",
-        "jms/serializer-bundle": "1.2.x",
+        "jms/serializer-bundle": "~1.7|~2.0",
         "jms/di-extra-bundle": "~1.8",
         "friendsofsymfony/rest-bundle": "~2.2"
     },

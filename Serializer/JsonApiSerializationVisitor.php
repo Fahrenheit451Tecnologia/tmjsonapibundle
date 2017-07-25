@@ -8,6 +8,7 @@ use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\Metadata\ClassMetadata as JMSClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
+use JMS\Serializer\Accessor\ExpressionAccessorStrategy;
 use TM\JsonApiBundle\Serializer\Configuration\Metadata\ClassMetadata as JsonApiClassMetadata;
 use TM\JsonApiBundle\Serializer\Configuration\Relationship;
 use TM\JsonApiBundle\Serializer\Event\JsonEventSubscriber;
@@ -19,6 +20,11 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
      * @var MetadataFactoryInterface
      */
     protected $metadataFactory;
+
+    /**
+     * @var ExpressionAccessorStrategy
+     */
+    protected $expressionAccessorStrategy;
 
     /**
      * @var bool
@@ -36,18 +42,21 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
 
     /**
      * @param PropertyNamingStrategyInterface $propertyNamingStrategy
+     * @param ExpressionAccessorStrategy $expressionAccessorStrategy
      * @param MetadataFactoryInterface $metadataFactory
      * @param bool $showVersionInfo
      * @param null $includeMaxDepth
      */
     public function __construct(
         PropertyNamingStrategyInterface $propertyNamingStrategy,
+        ExpressionAccessorStrategy $expressionAccessorStrategy,
         MetadataFactoryInterface $metadataFactory,
         $showVersionInfo = true,
         $includeMaxDepth = null
     ) {
         parent::__construct($propertyNamingStrategy);
 
+        $this->expressionAccessorStrategy = $expressionAccessorStrategy;
         $this->metadataFactory = $metadataFactory;
         $this->showVersionInfo = $showVersionInfo;
         $this->includeMaxDepth = $includeMaxDepth;
