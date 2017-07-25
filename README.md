@@ -158,6 +158,17 @@ class Cat
 }
 ```
 
+Annotation Reference
+--------------------
+
+```php
+<?php
+...
+/**
+* @Document(type="cats")
+*/
+```
+
 Credits
 -------
 
