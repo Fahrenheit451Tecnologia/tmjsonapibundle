@@ -161,6 +161,14 @@ class Cat
 Annotation Reference
 --------------------
 
+oneToMany = @BelongsTo & @HasMany
+
+manyToOne = @HasMany & @BelongsTo
+
+oneToOne = @BelongsTo & @BelongsTo
+
+manyToMany = @HasMany & @HasMany
+
 ```php
 <?php
 ...
