@@ -1,5 +1,5 @@
 {
-    "name": "tm/tm-jsonapi-bundle",
+    "name": "timemanager/tm-jsonapi-bundle",
     "description": "Symfony bundle for rendering responses with JsonApi standard",
     "type": "symfony-plugin",
     "license": "MIT",
