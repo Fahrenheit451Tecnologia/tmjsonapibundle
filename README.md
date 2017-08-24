@@ -11,7 +11,7 @@ Instalation
 ```yaml
 "require": {
         ...
-        "tm/tm-jsonapi-bundle": "0.1.1"
+        "timemanager/tm-jsonapi-bundle": "0.1.1"
     },
 ```
 
