@@ -92,6 +92,15 @@ class RegisterHandlersPass implements CompilerPassInterface
             ));
         }
 
-        $definition->addMethodCall('registerJsonApiHandler', [$data['type'], [$serviceId, $data['method']]]);
+        $definition->addMethodCall(
+            'registerJsonApiHandler',
+            [
+                $data['type'],
+                [
+                    new Reference($serviceId),
+                    $data['method']
+                ]
+            ]
+        );
     }
 }
