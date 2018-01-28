@@ -130,11 +130,9 @@ class Serializer implements FosRestSerializerInterface
         } else {
             $jmsContext = DeserializationContext::create();
 
-            $maxDepth = $context->getMaxDepth(false);
-            if (null !== $maxDepth) {
-                for ($i = 0; $i < $maxDepth; ++$i) {
+            $context->disableMaxDepth();
+            if ($context->isMaxDepthEnabled()) {
                     $jmsContext->increaseDepth();
-                }
             }
         }
 
@@ -149,7 +147,7 @@ class Serializer implements FosRestSerializerInterface
         if (!empty($groups)) {
             $jmsContext->setGroups($context->getGroups());
         }
-        if (null !== $context->getMaxDepth()) {
+        if ($context->isMaxDepthEnabled()) {
             $jmsContext->enableMaxDepthChecks();
         }
         if (null !== $context->getSerializeNull()) {
