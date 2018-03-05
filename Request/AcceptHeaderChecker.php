@@ -1,15 +1,11 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TM\JsonApiBundle\Request;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use TM\JsonApiBundle\Exception\AcceptMustHaveOneInstanceWithoutMediaTypeParameters;
 use TM\JsonApiBundle\Exception\ExceptionFactory;
 use TM\JsonApiBundle\TMJsonApiBundle;
 
-/**
- * @DI\Service("tm.header_checker.json_api_accept")
- */
 class AcceptHeaderChecker
 {
     /**

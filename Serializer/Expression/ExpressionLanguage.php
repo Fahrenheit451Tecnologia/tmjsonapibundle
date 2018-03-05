@@ -2,12 +2,9 @@
 
 namespace TM\JsonApiBundle\Serializer\Expression;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage as BaseExpressionLanguage;
 
 /**
- * @DI\Service("tm.expression_language.json_api")
- *
  * Adds some function to the default ExpressionLanguage.
  *
  * To get a service, use service('request').

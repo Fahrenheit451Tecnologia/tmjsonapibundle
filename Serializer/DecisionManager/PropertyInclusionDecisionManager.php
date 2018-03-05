@@ -1,8 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TM\JsonApiBundle\Serializer\DecisionManager;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Context;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
@@ -10,9 +9,6 @@ use TM\JsonApiBundle\Request\JsonApiRequest;
 use TM\JsonApiBundle\Serializer\Configuration\Metadata\ClassMetadataInterface;
 use TM\JsonApiBundle\Serializer\Configuration\Relationship;
 
-/**
- * @DI\Service("tm.decision_manager.json_api_property_inclusion")
- */
 class PropertyInclusionDecisionManager
 {
     /**
@@ -26,11 +22,6 @@ class PropertyInclusionDecisionManager
     private $namingStrategy;
 
     /**
-     * @DI\InjectParams({
-     *     "jsonApiRequest" = @DI\Inject("tm.request.json_api"),
-     *     "namingStrategy" = @DI\Inject("tm.serialization_naming_strategy.json_api")
-     * })
-     *
      * @param JsonApiRequest $jsonApiRequest
      * @param PropertyNamingStrategyInterface $namingStrategy
      */

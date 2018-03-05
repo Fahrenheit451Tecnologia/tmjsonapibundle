@@ -10,10 +10,26 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
 use TM\JsonApiBundle\Serializer\Configuration\Link;
 use TM\JsonApiBundle\Serializer\Configuration\Metadata\ClassMetadataInterface;
+use TM\JsonApiBundle\Serializer\Configuration\Metadata\JsonApiResourceMetadataFactoryInterface;
 use TM\JsonApiBundle\Serializer\Configuration\Relationship;
 
 class ClassMetadataDebugCommand extends ContainerAwareCommand
 {
+    /**
+     * @var JsonApiResourceMetadataFactoryInterface
+     */
+    private $jsonApiMetadataFactory;
+
+    /**
+     * @param JsonApiResourceMetadataFactoryInterface $jsonApiResourceMetadataFactory
+     */
+    public function __construct(JsonApiResourceMetadataFactoryInterface $jsonApiResourceMetadataFactory)
+    {
+        $this->jsonApiMetadataFactory = $jsonApiResourceMetadataFactory;
+
+        parent::__construct();
+    }
+
     /**
      * @see Command
      */
@@ -33,8 +49,6 @@ class ClassMetadataDebugCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $classMetadataFactory = $this->getContainer()->get('tm.metadata_factory.json_api');
-
         $className = $input->getArgument('fqcn');
 
         if (!class_exists($className)) {
@@ -44,7 +58,7 @@ class ClassMetadataDebugCommand extends ContainerAwareCommand
             ));
         }
 
-        if (null === $classMetadata = $classMetadataFactory->getMetadataForClass($className)) {
+        if (null === $classMetadata = $this->jsonApiMetadataFactory->getMetadataForClass($className)) {
             $output->writeln(sprintf('<error>No JSON API class metadata found for %s</error>', $className));
 
             exit(1);

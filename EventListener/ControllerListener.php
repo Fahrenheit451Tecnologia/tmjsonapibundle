@@ -4,14 +4,9 @@ namespace TM\JsonApiBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use TM\JsonApiBundle\Request\Configuration\ConfigurationInterface;
 
-/**
- * @DI\Service("tm.listener.json_api_controller")
- */
 class ControllerListener
 {
     /**
@@ -20,10 +15,6 @@ class ControllerListener
     private $reader;
 
     /**
-     * @DI\InjectParams({
-     *     "reader" = @DI\Inject("annotation_reader")
-     * })
-     *
      * @param Reader $reader
      */
     public function __construct(Reader $reader)
@@ -32,9 +23,8 @@ class ControllerListener
     }
 
     /**
-     * @DI\Observe(KernelEvents::CONTROLLER, priority=1)
-     *
      * @param FilterControllerEvent $event
+     * @throws \ReflectionException
      */
     public function onKernelController(FilterControllerEvent $event)
     {

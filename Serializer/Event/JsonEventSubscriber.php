@@ -1,9 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TM\JsonApiBundle\Serializer\Event;
 
 use Doctrine\Common\Util\ClassUtils;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Context;
 use JMS\Serializer\EventDispatcher\Events;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
@@ -24,10 +23,6 @@ use Metadata\MetadataFactoryInterface;
 use RuntimeException;
 use Traversable;
 
-/**
- * @DI\Service("tm.serializer_subscriber.json")
- * @DI\Tag("jms_serializer.event_subscriber")
- */
 class JsonEventSubscriber implements EventSubscriberInterface
 {
     const EXTRA_DATA_KEY = '__DATA__';
@@ -63,15 +58,6 @@ class JsonEventSubscriber implements EventSubscriberInterface
     protected $propertyInclusionDecisionManager;
 
     /**
-     * @DI\InjectParams({
-     *     "jsonApiMetadataFactory" = @DI\Inject("tm.metadata_factory.json_api"),
-     *     "jmsMetadataFactory" = @DI\Inject("jms_serializer.metadata_factory"),
-     *     "namingStrategy" = @DI\Inject("tm.serialization_naming_strategy.json_api"),
-     *     "relationshipValueGenerator" = @DI\Inject("tm.generator.serialization_relationship_value"),
-     *     "linkGenerator" = @DI\Inject("tm.generator.serialization_link"),
-     *     "propertyInclusionDecisionManager" = @DI\Inject("tm.decision_manager.json_api_property_inclusion")
-     * })
-     *
      * @param JsonApiResourceMetadataFactoryInterface $jsonApiMetadataFactory
      * @param MetadataFactoryInterface $jmsMetadataFactory
      * @param PropertyNamingStrategyInterface $namingStrategy

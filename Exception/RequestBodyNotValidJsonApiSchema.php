@@ -25,12 +25,12 @@ class RequestBodyNotValidJsonApiSchema extends AbstractJsonApiException
 
     /**
      * @param string $body
-     * @param array $errors
+     * @param array $validationErrors
      */
     public function __construct(string $body, array $validationErrors)
     {
         parent::__construct(
-            (string) Response::HTTP_INTERNAL_SERVER_ERROR,
+            Response::HTTP_INTERNAL_SERVER_ERROR,
             'Request body is not a valid JSON API document.'
         );
 

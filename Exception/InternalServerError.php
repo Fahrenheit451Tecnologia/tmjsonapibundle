@@ -15,7 +15,7 @@ class InternalServerError extends AbstractJsonApiException
     public function __construct(string $details)
     {
         parent::__construct(
-            (string) Response::HTTP_INTERNAL_SERVER_ERROR,
+            Response::HTTP_INTERNAL_SERVER_ERROR,
             $details
         );
     }

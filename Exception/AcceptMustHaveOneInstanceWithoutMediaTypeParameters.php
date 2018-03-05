@@ -15,7 +15,7 @@ class AcceptMustHaveOneInstanceWithoutMediaTypeParameters extends AbstractJsonAp
     public function __construct(string $contentType)
     {
         parent::__construct(
-            (string) Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
+            Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
             sprintf(
                 'Request "Accept" header must not specify any media types, "%s" given',
                 $contentType

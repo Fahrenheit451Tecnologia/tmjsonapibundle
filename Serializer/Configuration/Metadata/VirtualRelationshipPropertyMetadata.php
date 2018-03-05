@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TM\JsonApiBundle\Serializer\Configuration\Metadata;
 
@@ -24,13 +24,15 @@ class VirtualRelationshipPropertyMetadata extends PropertyMetadata
             $class = get_class($class);
         }
 
-        $this->class = $class;
-        $this->name = $relationship->getName();
         $this->relationship = $relationship;
+
+        parent::__construct($class, $relationship->getName());
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @todo
      */
     public function getValue($obj)
     {

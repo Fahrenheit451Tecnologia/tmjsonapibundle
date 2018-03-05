@@ -3,12 +3,8 @@
 namespace TM\JsonApiBundle\Request;
 
 use FOS\RestBundle\Decoder\DecoderInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use TM\JsonApiBundle\Exception\ExceptionFactory;
 
-/**
- * @DI\Service("tm.decoder.json_api")
- */
 class JsonApiDecoder implements DecoderInterface
 {
     /**
@@ -27,11 +23,6 @@ class JsonApiDecoder implements DecoderInterface
     private $errors = [];
 
     /**
-     * @DI\InjectParams({
-     *     "jsonApiRequest" = @DI\Inject("tm.request.json_api"),
-     *     "jsonDecoder" = @DI\Inject("fos_rest.decoder.json")
-     * })
-     *
      * @param JsonApiRequest $jsonApiRequest
      * @param DecoderInterface $jsonDecoder
      */

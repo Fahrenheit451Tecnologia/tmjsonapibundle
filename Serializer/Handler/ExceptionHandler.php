@@ -3,7 +3,6 @@
 namespace TM\JsonApiBundle\Serializer\Handler;
 
 use FOS\RestBundle\Serializer\Normalizer\AbstractExceptionNormalizer;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonSerializationVisitor;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,18 +12,9 @@ use TM\JsonApiBundle\Exception\AbstractJsonApiException;
 use TM\JsonApiBundle\Exception\JsonApiSourceException;
 use TM\JsonApiBundle\Model\Error;
 
-/**
- * @DI\Service("tm.serialization_handler.exception")
- * @DI\Tag("tm.subscribing_handler.json_api.serializer")
- */
 class ExceptionHandler extends AbstractExceptionNormalizer implements SubscribingHandlerInterface
 {
     /**
-     * @DI\InjectParams({
-     *     "messagesMap" = @DI\Inject("fos_rest.exception.messages_map"),
-     *     "debug" = @DI\Inject("%kernel.debug%"),
-     * })
-     *
      * @param array|\FOS\RestBundle\Util\ExceptionValueMap $messagesMap
      * @param bool $debug
      */

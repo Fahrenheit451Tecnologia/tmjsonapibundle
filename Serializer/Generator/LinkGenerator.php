@@ -2,14 +2,10 @@
 
 namespace TM\JsonApiBundle\Serializer\Generator;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use TM\JsonApiBundle\Serializer\Configuration\Link;
 use TM\JsonApiBundle\Serializer\Expression\ExpressionEvaluator;
 
-/**
- * @DI\Service("tm.generator.serialization_link")
- */
 class LinkGenerator
 {
     /**
@@ -23,11 +19,6 @@ class LinkGenerator
     private $expressionLanguage;
 
     /**
-     * @DI\InjectParams({
-     *     "router" = @DI\Inject("router"),
-     *     "expressionEvaluator" = @DI\Inject("tm.expression_evaluator.json_api")
-     * })
-     *
      * @param UrlGeneratorInterface $router
      * @param ExpressionEvaluator $expressionEvaluator
      */

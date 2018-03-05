@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use TM\JsonApiBundle\Serializer\DecisionManager\JsonApiSerializationDecisionManager;
 use TM\JsonApiBundle\Serializer\Handler\HandlerRegistry;
 use TM\JsonApiBundle\Serializer\Handler\SubscribingHandlerInterface;
 
@@ -59,8 +60,8 @@ class RegisterHandlersPass implements CompilerPassInterface
         $handlerRegistry = new Definition(
             HandlerRegistry::class,
             [
-                new Reference('tm.decision_manager.json_api_serialization'),
-                new Reference('tm.registry.jms_serializer_handler'),
+                new Reference(JsonApiSerializationDecisionManager::class),
+                new Reference(HandlerRegistry::class),
             ]
         );
 
@@ -68,7 +69,7 @@ class RegisterHandlersPass implements CompilerPassInterface
         $oldRegistry->setPublic(false);
 
         $container->setDefinition('jms_serializer.handler_registry', $handlerRegistry);
-        $container->setDefinition('tm.registry.jms_serializer_handler', $oldRegistry);
+        $container->setDefinition(HandlerRegistry::class, $oldRegistry);
     }
 
     /**

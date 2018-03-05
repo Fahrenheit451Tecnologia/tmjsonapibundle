@@ -2,16 +2,11 @@
 
 namespace TM\JsonApiBundle\Serializer\Handler;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Handler\SubscribingHandlerInterface as JMSSubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
 use TM\JsonApiBundle\Document\ErrorDocument;
 use TM\JsonApiBundle\Model\Error;
 
-/**
- * @DI\Service("tm.serialization_handler.json_api_error")
- * @DI\Tag("jms_serializer.subscribing_handler")
- */
 class JsonApiErrorHandler implements JMSSubscribingHandlerInterface
 {
     /**

@@ -16,7 +16,7 @@ class JsonApiIdAndRequestIdMismatch extends AbstractJsonApiException
     public function __construct($jsonApiId, $requestId)
     {
         parent::__construct(
-            (string) Response::HTTP_BAD_REQUEST,
+            Response::HTTP_BAD_REQUEST,
             sprintf(
                 'ID in JSON API ("%s") resource and ID in request ("%s") do not match',
                 (string) $jsonApiId,

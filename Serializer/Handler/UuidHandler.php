@@ -2,16 +2,11 @@
 
 namespace TM\JsonApiBundle\Serializer\Handler;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface as JMSSubscribingHandlerInterface;
 use JMS\Serializer\JsonSerializationVisitor;
-use TM\ResourceBundle\Uuid\Uuid;
+use TM\JsonApiBundle\Model\UuidInterface;
 
-/**
- * @DI\Service("tm.serialization_handler.uuid")
- * @DI\Tag("jms_serializer.subscribing_handler")
- */
 class UuidHandler implements JMSSubscribingHandlerInterface
 {
     /**
@@ -23,13 +18,13 @@ class UuidHandler implements JMSSubscribingHandlerInterface
 
         foreach (['json', 'xml'] as $format) {
             $methods[] = [
-                'type'      => Uuid::class,
+                'type'      => UuidInterface::class,
                 'method'    => 'serialize',
                 'format'    => $format,
                 'direction' => GraphNavigator::DIRECTION_SERIALIZATION,
             ];
             $methods[] = [
-                'type'      => Uuid::class,
+                'type'      => UuidInterface::class,
                 'method'    => 'unserialize',
                 'format'    => $format,
                 'direction' => GraphNavigator::DIRECTION_DESERIALIZATION,
@@ -41,11 +36,11 @@ class UuidHandler implements JMSSubscribingHandlerInterface
 
     /**
      * @param JsonSerializationVisitor $visitor
-     * @param Uuid $uuid
+     * @param UuidInterface $uuid
      * @param array $type
      * @return string
      */
-    public function serialize(JsonSerializationVisitor $visitor, Uuid $uuid, array $type)
+    public function serialize(JsonSerializationVisitor $visitor, UuidInterface $uuid, array $type)
     {
         return (string) $uuid;
     }
@@ -54,12 +49,12 @@ class UuidHandler implements JMSSubscribingHandlerInterface
      * @param JsonSerializationVisitor $visitor
      * @param $data
      * @param array $type
-     * @return null|Uuid
+     * @return null|UuidInterface
      */
     public function unserialize(JsonSerializationVisitor $visitor, $data, array $type)
     {
-        if (Uuid::isValid((string) $data)) {
-            return Uuid::fromString((string) $data);
+        if (UuidInterface::isValid((string) $data)) {
+            return UuidInterface::fromString((string) $data);
         }
 
         return null;

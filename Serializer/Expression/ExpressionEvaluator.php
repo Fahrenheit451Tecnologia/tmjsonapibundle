@@ -2,12 +2,6 @@
 
 namespace TM\JsonApiBundle\Serializer\Expression;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
-
-/**
- * @DI\Service("tm.expression_evaluator.json_api")
- */
 class ExpressionEvaluator
 {
     const EXPRESSION_REGEX = '/expr\((?P<expression>.+)\)/';
@@ -28,10 +22,6 @@ class ExpressionEvaluator
     private $context = [];
 
     /**
-     * @DI\InjectParams({
-     *     "expressionLanguage" = @DI\Inject("tm.expression_language.json_api")
-     * })
-     *
      * @param ExpressionLanguage $expressionLanguage
      */
     public function __construct(ExpressionLanguage $expressionLanguage)

@@ -1,0 +1,113 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: false
+
+    TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\AnnotationDriver: ~
+
+    TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\YamlDriver:
+        arguments:
+            $locator: '@jms_serializer.metadata.file_locator'
+            $doctrine: '@doctrine'
+
+    tm.serialization_driver.chain.json_api:
+        class: '%jms_serializer.metadata.chain_driver.class%'
+        arguments:
+            - [ '@TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\AnnotationDriver' ]
+
+    tm.metadata_cache.json_api.file_cache:
+        class: '%jms_serializer.metadata.cache.file_cache.class%'
+        arguments:
+            - ~
+
+    tm.metadata_cache.json_api: '@tm.metadata_cache.json_api.file_cache'
+
+    tm.serialization_naming_strategy.json_api.camel_case:
+        class: 'JMS\Serializer\Naming\CamelCaseNamingStrategy'
+        arguments:
+            - '-'
+            - true
+
+    tm.serialization_naming_strategy.json_api:
+        class: 'JMS\Serializer\Naming\SerializedNameAnnotationStrategy'
+        arguments:
+            - '@tm.serialization_naming_strategy.json_api.camel_case'
+
+    TM\JsonApiBundle\EventListener\ControllerListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.controller', priority: 1 }
+
+    TM\JsonApiBundle\EventListener\JsonApiRequestListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'kernel.request', priority: 250 }
+            - { name: 'kernel.event_listener', event: 'kernel.controller' }
+
+    TM\JsonApiBundle\Form\Extension\JsonPointerOptionExtension:
+        tags:
+            - { name: 'form.type_extension', extended_type: 'Symfony\Component\Form\Extension\Core\Type\FormType' }
+
+    TM\JsonApiBundle\Request\AcceptHeaderChecker: ~
+    TM\JsonApiBundle\Request\ContentTypeHeaderChecker: ~
+    TM\JsonApiBundle\Request\JsonApiRequest: ~
+
+    TM\JsonApiBundle\Request\JsonApiDecoder:
+        arguments:
+            $jsonDecoder: '@fos_rest.decoder.json'
+
+    TM\JsonApiBundle\Serializer\Configuration\Metadata\MetadataFactory:
+        arguments:
+            $driver: '@tm.serialization_driver.chain.json_api'
+            $debug: '%kernel.debug%'
+        calls:
+            - [ 'setCache', [ '@tm.metadata_cache.json_api' ]]
+
+    TM\JsonApiBundle\Serializer\DecisionManager\JsonApiSerializationDecisionManager: ~
+
+    TM\JsonApiBundle\Serializer\DecisionManager\PropertyInclusionDecisionManager:
+        arguments:
+            $namingStrategy: '@tm.serialization_naming_strategy.json_api'
+
+    TM\JsonApiBundle\Serializer\Event\JsonEventSubscriber:
+        arguments:
+            $jmsMetadataFactory: '@jms_serializer.metadata_factory'
+            $namingStrategy: 'tm.serialization_naming_strategy.json_api'
+        tags:
+            - 'jms_serializer.event_subscriber'
+
+    TM\JsonApiBundle\Serializer\Expression\ExpressionEvaluator: ~
+    TM\JsonApiBundle\Serializer\Expression\ExpressionLanguage: ~
+    TM\JsonApiBundle\Serializer\Generator\LinkGenerator: ~
+    TM\JsonApiBundle\Serializer\Generator\RelationshipValueGenerator: ~
+
+    TM\JsonApiBundle\Serializer\Handler\ExceptionHandler:
+        arguments:
+            $messagesMap: '@fos_rest.exception.messages_map'
+            $debug: '%kernel.debug%'
+        tags:
+            - 'tm.subscribing_handler.json_api.serializer'
+
+    TM\JsonApiBundle\Serializer\Handler\FormErrorHandler:
+        arguments:
+            $translator: '@translator'
+        tags:
+            - 'tm.subscribing_handler.json_api.serializer'
+
+    TM\JsonApiBundle\Serializer\Handler\JsonApiErrorHandler:
+        tags:
+            - 'jms_serializer.subscribing_handler'
+
+    TM\JsonApiBundle\Serializer\Handler\PagerfantaHandler:
+        arguments:
+            $requestStack: '@request_stack'
+            $router: '@router'
+        tags:
+            - 'jms_serializer.subscribing_handler'
+
+    TM\JsonApiBundle\Serializer\Handler\UuidHandler:
+        tags:
+            - 'jms_serializer.subscribing_handler'
+
+    TM\JsonApiBundle\Serializer\Serializer:
+        arguments:
+            $serializer: '@jms_serializer.serializer'
+            $namingStrategy: '@tm.serialization_naming_strategy.json_api'

@@ -4,11 +4,9 @@ namespace TM\JsonApiBundle\Serializer;
 
 use FOS\RestBundle\Context\Context as FOSRestContext;
 use FOS\RestBundle\Serializer\Serializer as FOSRestSerializerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\AbstractVisitor;
 use JMS\Serializer\Exception\UnsupportedFormatException;
 use JMS\Serializer\Exclusion\ExclusionStrategyInterface;
-use JMS\Serializer\Naming\CamelCaseNamingStrategy;
 use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
 use JMS\Serializer\SerializerInterface;
 use JMS\Serializer\Serializer as JMSSerializer;
@@ -17,9 +15,6 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\DeserializationContext;
 use TM\JsonApiBundle\Serializer\DecisionManager\JsonApiSerializationDecisionManager;
 
-/**
- * @DI\Service("tm.serializer.json_api")
- */
 class Serializer implements FosRestSerializerInterface
 {
     /**
@@ -53,12 +48,6 @@ class Serializer implements FosRestSerializerInterface
     protected $exclusionStrategies = [];
 
     /**
-     * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("jms_serializer.serializer"),
-     *     "jsonApiSerializationDecisionManager" = @DI\Inject("tm.decision_manager.json_api_serialization"),
-     *     "namingStrategy" = @DI\Inject("tm.serialization_naming_strategy.json_api")
-     * })
-     *
      * @param SerializerInterface $serializer
      * @param JsonApiSerializationDecisionManager $jsonApiSerializationDecisionManager
      * @param PropertyNamingStrategyInterface $namingStrategy

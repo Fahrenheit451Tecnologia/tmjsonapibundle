@@ -2,34 +2,29 @@
 
 namespace TM\JsonApiBundle\DependencyInjection;
 
-use JMS\Serializer\Naming\CamelCaseNamingStrategy;
-use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
-use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class TMJsonApiExtension extends Extension implements PrependExtensionInterface
 {
+    /* private */ const CONFIG_FILES = [
+        'services',
+    ];
+
     /**
      * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $container
-            ->setDefinition(
-                'tm.serialization_driver.chain.json_api',
-                new Definition(
-                    $container->getParameter('jms_serializer.metadata.chain_driver.class'),
-                    [[
-                        new Reference('tm.serialization_driver.annotation.json_api'),
-                    ]]
-                )
-            )
-            ->setPublic(false)
-        ;
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+
+        foreach (self::CONFIG_FILES as $fileName) {
+            $loader->load(sprintf('%s.yaml', $fileName));
+        }
 
         $configDir = '%kernel.cache_dir%/json_api';
 
@@ -42,32 +37,8 @@ class TMJsonApiExtension extends Extension implements PrependExtensionInterface
         }
 
         $container
-            ->setDefinition(
-                'tm.metadata_cache.json_api.file_cache',
-                new Definition(
-                    $container->getParameter('jms_serializer.metadata.cache.file_cache.class'),
-                    [ $configDir ]
-                )
-            )
-            ->setPublic(false)
-        ;
-
-        $container->setAlias('tm.metadata_cache.json_api', 'tm.metadata_cache.json_api.file_cache');
-
-        $container
-            ->setDefinition(
-                'tm.serialization_naming_strategy.json_api',
-                new Definition(
-                    SerializedNameAnnotationStrategy::class,
-                    [
-                        new Definition(
-                            CamelCaseNamingStrategy::class,
-                            [ '-', true ]
-                        )
-                    ]
-                )
-            )
-            ->setPublic(false)
+            ->getDefinition('tm.metadata_cache.json_api.file_cache')
+            ->replaceArgument(0, $configDir)
         ;
     }
 
@@ -90,7 +61,7 @@ class TMJsonApiExtension extends Extension implements PrependExtensionInterface
         $container->prependExtensionConfig('fos_rest', [
             'body_listener' => [
                 'decoders'  => [
-                    'json'  => 'tm.decoder.json_api',
+                    'json'  => 'TM\JsonApiBundle\Request\JsonApiDecoder',
                 ]
             ],
             'exception'     => true,

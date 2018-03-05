@@ -28,7 +28,7 @@ class RequestBodyContainsInvalidJson extends AbstractJsonApiException
     public function __construct(string $body, string $errors)
     {
         parent::__construct(
-            (string) Response::HTTP_INTERNAL_SERVER_ERROR,
+            Response::HTTP_INTERNAL_SERVER_ERROR,
             'Request body contains invalid json.'."\n".$errors
         );
 

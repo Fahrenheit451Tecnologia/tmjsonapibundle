@@ -3,7 +3,6 @@
 namespace TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver;
 
 use Doctrine\Common\Annotations\Reader;
-use JMS\DiExtraBundle\Annotation as DI;
 use Metadata\Driver\DriverInterface;
 use TM\JsonApiBundle\Serializer\Configuration\Annotation;
 use TM\JsonApiBundle\Serializer\Configuration\Document;
@@ -12,9 +11,6 @@ use TM\JsonApiBundle\Serializer\Configuration\Metadata\ClassMetadata;
 use TM\JsonApiBundle\Serializer\Configuration\Relationship;
 use TM\JsonApiBundle\Util\StringUtil;
 
-/**
- * @DI\Service("tm.serialization_driver.annotation.json_api")
- */
 class AnnotationDriver implements DriverInterface
 {
     /**
@@ -23,11 +19,6 @@ class AnnotationDriver implements DriverInterface
     private $reader;
 
     /**
-     * @DI\InjectParams({
-     *     "reader" = @DI\Inject("annotation_reader"),
-     *
-     * })
-     *
      * @param Reader $reader
      */
     public function __construct(Reader $reader)

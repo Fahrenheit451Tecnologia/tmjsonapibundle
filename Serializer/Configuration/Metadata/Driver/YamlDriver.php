@@ -3,22 +3,17 @@
 namespace TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
-use JMS\DiExtraBundle\Annotation as DI;
 use Metadata\Driver\AbstractFileDriver;
 use Metadata\Driver\FileLocatorInterface;
 use Symfony\Component\Yaml\Yaml;
+use TM\JsonApiBundle\Exception\UnexpectedTypeException;
 use TM\JsonApiBundle\Serializer\Configuration\Document;
 use TM\JsonApiBundle\Serializer\Configuration\Link;
 use TM\JsonApiBundle\Serializer\Configuration\Metadata\Assert\AssertDoctrineMappingMatchesRelationshipType;
 use TM\JsonApiBundle\Serializer\Configuration\Metadata\ClassMetadata;
 use TM\JsonApiBundle\Serializer\Configuration\Relationship;
 use TM\JsonApiBundle\Util\StringUtil;
-use TM\ResourceBundle\Exception\UnexpectedTypeException;
 
-/**
- * @DI\Service("tm.serialization_driver.yaml.json_api")
- */
 class YamlDriver extends AbstractFileDriver
 {
     /**
@@ -27,11 +22,6 @@ class YamlDriver extends AbstractFileDriver
     private $doctrine;
 
     /**
-     * @DI\InjectParams({
-     *     "locator" = @DI\Inject("jms_serializer.metadata.file_locator"),
-     *     "doctrine" = @DI\Inject("doctrine")
-     * })
-     *
      * @param FileLocatorInterface $locator
      */
     public function __construct(FileLocatorInterface $locator, ManagerRegistry $doctrine)
@@ -190,12 +180,17 @@ class YamlDriver extends AbstractFileDriver
             ));
         }
 
-        if (!in_array($config['type'], Relationship::MAPPING_TYPES)) {
+        $mappingTypes = [
+            Relationship::MAPPING_BELONGS_TO,
+            Relationship::MAPPING_HAS_MANY,
+        ];
+
+        if (!in_array($config['type'], $mappingTypes)) {
             throw new \InvalidArgumentException(sprintf(
                 'Property "%s" in class "%s" must have a valid relationship type. Available types are: "%s"',
                 $config['name'] ?? $propertyName,
                 $classMetadata->name,
-                implode('", "', Relationship::MAPPING_TYPES)
+                implode('", "', $mappingTypes)
             ));
         }
 

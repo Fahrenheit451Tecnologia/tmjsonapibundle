@@ -20,7 +20,7 @@ abstract class AbstractJsonApiException extends HttpException
         $this->checkConstants();
 
         $error = Error::create()
-            ->setStatus($this->getStatusCode())
+            ->setStatus((string) $this->getStatusCode())
             ->setCode(static::CODE)
             ->setTitle(static::TITLE)
             ->setDetail($this->getMessage())

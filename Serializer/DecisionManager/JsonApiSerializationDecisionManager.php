@@ -2,12 +2,8 @@
 
 namespace TM\JsonApiBundle\Serializer\DecisionManager;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use TM\JsonApiBundle\Request\JsonApiRequest;
 
-/**
- * @DI\Service("tm.decision_manager.json_api_serialization")
- */
 class JsonApiSerializationDecisionManager
 {
     /**
@@ -21,10 +17,6 @@ class JsonApiSerializationDecisionManager
     private $forceDecision;
 
     /**
-     * @DI\InjectParams({
-     *     "jsonApiRequest" = @DI\Inject("tm.request.json_api")
-     * })
-     *
      * @param JsonApiRequest $jsonApiRequest
      */
     public function __construct(JsonApiRequest $jsonApiRequest)

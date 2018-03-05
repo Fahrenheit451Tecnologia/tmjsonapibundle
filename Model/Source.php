@@ -3,7 +3,6 @@
 namespace TM\JsonApiBundle\Model;
 
 use Assert\InvalidArgumentException;
-use TM\JsonApiBundle\Model\HasToJson;
 
 class Source implements HasToJson
 {

@@ -2,13 +2,9 @@
 
 namespace TM\JsonApiBundle\Request;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @DI\Service("tm.request.json_api")
- */
 class JsonApiRequest
 {
     /**
@@ -62,11 +58,6 @@ class JsonApiRequest
     private $jsonPointerMap;
 
     /**
-     * @DI\InjectParams({
-     *     "contentTypeChecker" = @DI\Inject("tm.header_checker.json_api_content_type"),
-     *     "acceptChecker" = @DI\Inject("tm.header_checker.json_api_accept")
-     * })
-     *
      * @param ContentTypeHeaderChecker $contentTypeChecker
      * @param AcceptHeaderChecker $acceptChecker
      */

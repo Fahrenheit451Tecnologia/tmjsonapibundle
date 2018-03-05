@@ -2,15 +2,11 @@
 
 namespace TM\JsonApiBundle\Serializer\Handler;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\HandlerRegistryInterface;
 use JMS\Serializer\Handler\SubscribingHandlerInterface as JMSSubscribingHandlerInterface;
 use TM\JsonApiBundle\Serializer\DecisionManager\JsonApiSerializationDecisionManager;
 
-/**
- * _DI\Service("tm.registry.json_api_serializer_handler")
- */
 class HandlerRegistry implements HandlerRegistryInterface
 {
     const FORMAT = '_json_api';
@@ -26,11 +22,6 @@ class HandlerRegistry implements HandlerRegistryInterface
     private $jmsHandlerRegistry;
 
     /**
-     * _DI\InjectParams({
-     *     "jsonApiSerializationDecisionManager" = _DI\Inject("tm.decision_manager.json_api_serialization"),
-     *     "jmsHandlerRegistry" = _DI\Inject("tm.registry.jms_serializer_handler")
-     * })
-     *
      * @param JsonApiSerializationDecisionManager $jsonApiSerializationDecisionManager
      * @param HandlerRegistryInterface $jmsHandlerRegistry
      */
