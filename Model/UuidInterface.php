@@ -8,11 +8,11 @@ interface UuidInterface
      * @param string $uuid
      * @return bool
      */
-    public static function isValid(string $uuid) : bool;
+    public static function isValid(string $uuid);
 
     /**
      * @param string $uuid
      * @return UuidInterface
      */
-    public static function fromString(string $uuid) : UuidInterface;
+    public static function fromString(string $uuid);
 }

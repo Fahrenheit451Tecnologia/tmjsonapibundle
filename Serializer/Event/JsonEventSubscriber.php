@@ -61,6 +61,7 @@ class JsonEventSubscriber implements EventSubscriberInterface
      * @param JsonApiResourceMetadataFactoryInterface $jsonApiMetadataFactory
      * @param MetadataFactoryInterface $jmsMetadataFactory
      * @param PropertyNamingStrategyInterface $namingStrategy
+     * @param RelationshipValueGenerator $relationshipValueGenerator
      * @param LinkGenerator $linkGenerator
      * @param PropertyInclusionDecisionManager $propertyInclusionDecisionManager
      */

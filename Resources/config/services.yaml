@@ -54,6 +54,7 @@ services:
         arguments:
             $jsonDecoder: '@fos_rest.decoder.json'
 
+    TM\JsonApiBundle\Serializer\Configuration\Metadata\JsonApiResourceMetadataFactoryInterface: '@TM\JsonApiBundle\Serializer\Configuration\Metadata\MetadataFactory'
     TM\JsonApiBundle\Serializer\Configuration\Metadata\MetadataFactory:
         arguments:
             $driver: '@tm.serialization_driver.chain.json_api'
@@ -70,7 +71,7 @@ services:
     TM\JsonApiBundle\Serializer\Event\JsonEventSubscriber:
         arguments:
             $jmsMetadataFactory: '@jms_serializer.metadata_factory'
-            $namingStrategy: 'tm.serialization_naming_strategy.json_api'
+            $namingStrategy: '@tm.serialization_naming_strategy.json_api'
         tags:
             - 'jms_serializer.event_subscriber'
 
