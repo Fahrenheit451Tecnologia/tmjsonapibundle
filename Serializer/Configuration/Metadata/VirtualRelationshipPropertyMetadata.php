@@ -26,7 +26,8 @@ class VirtualRelationshipPropertyMetadata extends PropertyMetadata
 
         $this->relationship = $relationship;
 
-        parent::__construct($class, $relationship->getName());
+        $this->class = $class;
+        $this->name = $relationship->getName();
     }
 
     /**
