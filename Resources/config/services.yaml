@@ -3,6 +3,11 @@ services:
         autowire: true
         autoconfigure: false
 
+    TM\JsonApiBundle\Command\:
+        resource: '../../Command'
+        tags:
+            - 'console.command'
+
     TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\AnnotationDriver: ~
 
     TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\YamlDriver:
