@@ -2,7 +2,6 @@
 
 namespace TM\JsonApiBundle\Serializer\Handler;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\JsonSerializationVisitor;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -12,10 +11,6 @@ use TM\JsonApiBundle\Model\Error;
 use TM\JsonApiBundle\Model\Source;
 use TM\JsonApiBundle\Request\JsonApiRequest;
 
-/**
- * @DI\Service("tm.serialization_handler.form_error")
- * @DI\Tag("tm.subscribing_handler.json_api.serializer")
- */
 class FormErrorHandler implements SubscribingHandlerInterface
 {
     /**
@@ -29,11 +24,6 @@ class FormErrorHandler implements SubscribingHandlerInterface
     private $jsonApiRequest;
 
     /**
-     * @DI\InjectParams({
-     *     "translator" = @DI\Inject("translator"),
-     *     "jsonApiRequest" = @Di\Inject("tm.request.json_api")
-     * })
-     *
      * @param TranslatorInterface $translator
      * @param JsonApiRequest $jsonApiRequest
      */

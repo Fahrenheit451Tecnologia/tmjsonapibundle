@@ -15,16 +15,18 @@
     ],
     "require": {
         "php": ">=7.0",
-        "jms/serializer-bundle": "~1.7|~2.0",
-        "friendsofsymfony/rest-bundle": "~2.2",
+
         "beberlei/assert": "^2.7",
+        "doctrine/orm": "^2.5",
+        "friendsofsymfony/rest-bundle": "~2.2",
+        "jms/serializer-bundle": "~1.7|~2.0",
+        "pagerfanta/pagerfanta": "~1.0",
         "symfony/console": "~4.0",
-        "symfony/yaml": "~4.0",
         "symfony/dependency-injection": "~4.0",
         "symfony/expression-language": "~4.0",
         "symfony/form": "~4.0",
         "symfony/translation": "~4.0",
-        "doctrine/orm": "^2.5"
+        "symfony/yaml": "~4.0"
     },
     "autoload": {
         "psr-4": {"TM\\JsonApiBundle\\": ""}

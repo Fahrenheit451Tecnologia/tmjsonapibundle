@@ -2,7 +2,6 @@
 
 namespace TM\JsonApiBundle\Serializer\Handler;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\Context;
 use JMS\Serializer\GraphNavigator;
 use JMS\Serializer\Handler\SubscribingHandlerInterface as JMSSubscribingHandlerInterface;
@@ -12,10 +11,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use TM\JsonApiBundle\Serializer\JsonApiSerializationVisitor;
 use TM\JsonApiBundle\Serializer\Representation\PaginatedRepresentation;
 
-/**
- * @DI\Service("tm.serialization_handler.pagerfanta")
- * @DI\Tag("jms_serializer.subscribing_handler")
- */
 class PagerfantaHandler implements JMSSubscribingHandlerInterface
 {
     /**
@@ -29,11 +24,6 @@ class PagerfantaHandler implements JMSSubscribingHandlerInterface
     protected $router;
 
     /**
-     * @DI\InjectParams({
-     *     "requestStack" = @DI\Inject("request_stack"),
-     *     "router" = @DI\Inject("router")
-     * })
-     *
      * @param RequestStack $requestStack
      * @param UrlGeneratorInterface $router
      */
