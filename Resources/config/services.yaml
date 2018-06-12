@@ -18,7 +18,9 @@ services:
     tm.serialization_driver.chain.json_api:
         class: '%jms_serializer.metadata.chain_driver.class%'
         arguments:
-            - [ '@TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\AnnotationDriver' ]
+            -
+                - '@TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\AnnotationDriver'
+                - '@TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\YamlDriver'
 
     tm.metadata_cache.json_api.file_cache:
         class: '%jms_serializer.metadata.cache.file_cache.class%'
