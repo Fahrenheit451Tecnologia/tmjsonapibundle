@@ -12,7 +12,7 @@ services:
 
     TM\JsonApiBundle\Serializer\Configuration\Metadata\Driver\YamlDriver:
         arguments:
-            $locator: '@jms_serializer.metadata.file_locator'
+            $locator: '@tm.serialization_metadata.file_locator'
             $doctrine: '@doctrine'
 
     tm.serialization_driver.chain.json_api:
