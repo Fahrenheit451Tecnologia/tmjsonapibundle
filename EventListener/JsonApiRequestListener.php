@@ -60,6 +60,10 @@ class JsonApiRequestListener
             $configuration = new RequestParameters([]);
         }
 
+        if (is_array($configuration)) {
+            $configuration = new RequestParameters($configuration);
+        }
+
         $this->assertIdMatch($request, $configuration);
 
         if ($configuration->includeId()) {
