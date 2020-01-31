@@ -10,16 +10,11 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $tb = new TreeBuilder();
+        $treeBuilder = new TreeBuilder('tm_json_api');
 
-        $root = $tb
-            ->root('tm_json_api', 'array')
-                ->children()
-        ;
+        $this->addMetadataSection($treeBuilder->getRootNode()->children());
 
-        $this->addMetadataSection($root);
-
-        return $tb;
+        return $treeBuilder;
     }
 
     private function addMetadataSection(NodeBuilder $builder)
