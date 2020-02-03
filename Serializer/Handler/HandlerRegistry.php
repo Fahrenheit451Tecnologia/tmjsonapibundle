@@ -46,7 +46,7 @@ class HandlerRegistry implements HandlerRegistryInterface
     /**
      * {@inheritdoc}
      */
-    public function registerHandler($direction, $typeName, $format, $handler)
+    public function registerHandler(int $direction, string $typeName, string $format, $handler): void
     {
         $this->jmsHandlerRegistry->registerHandler($direction, $typeName, $format, $handler);
     }
@@ -54,7 +54,7 @@ class HandlerRegistry implements HandlerRegistryInterface
     /**
      * {@inheritdoc}
      */
-    public function registerSubscribingHandler(JMSSubscribingHandlerInterface $handler)
+    public function registerSubscribingHandler(JMSSubscribingHandlerInterface $handler): void
     {
         $this->registerSubscribingHandler($handler);
     }
