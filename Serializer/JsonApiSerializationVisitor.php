@@ -4,7 +4,10 @@ namespace TM\JsonApiBundle\Serializer;
 
 use Doctrine\Common\Util\ClassUtils;
 use JMS\Serializer\Context;
-use JMS\Serializer\JsonSerializationVisitor;
+use JMS\Serializer\AbstractVisitor;
+use JMS\Serializer\Exception\NotAcceptableException;
+use JMS\Serializer\Exception\RuntimeException;
+use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Metadata\ClassMetadata as JMSClassMetadata;
 use JMS\Serializer\Metadata\PropertyMetadata;
 use JMS\Serializer\Naming\PropertyNamingStrategyInterface;
@@ -14,7 +17,7 @@ use TM\JsonApiBundle\Serializer\Configuration\Relationship;
 use TM\JsonApiBundle\Serializer\Event\JsonEventSubscriber;
 use Metadata\MetadataFactoryInterface;
 
-class JsonApiSerializationVisitor extends JsonSerializationVisitor
+class JsonApiSerializationVisitor extends AbstractVisitor
 {
     /**
      * @var MetadataFactoryInterface
@@ -41,6 +44,20 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
     private $includedResources = [];
 
     /**
+     * @var array
+     */
+    private $dataStack = [];
+    /**
+     * @var \ArrayObject
+     */
+    private $data;
+
+    /**
+     * @var int
+     */
+    private $options = JSON_PRESERVE_ZERO_FRACTION;
+
+    /**
      * @param PropertyNamingStrategyInterface $propertyNamingStrategy
      * @param ExpressionAccessorStrategy $expressionAccessorStrategy
      * @param MetadataFactoryInterface $metadataFactory
@@ -52,14 +69,89 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
         ExpressionAccessorStrategy $expressionAccessorStrategy,
         MetadataFactoryInterface $metadataFactory,
         $showVersionInfo = true,
+        int $options = JSON_PRESERVE_ZERO_FRACTION,
         $includeMaxDepth = null
     ) {
-        parent::__construct($propertyNamingStrategy);
 
         $this->expressionAccessorStrategy = $expressionAccessorStrategy;
         $this->metadataFactory = $metadataFactory;
         $this->showVersionInfo = $showVersionInfo;
         $this->includeMaxDepth = $includeMaxDepth;
+        $this->options = $options;
+        $this->dataStack = [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitNull($data, array $type)
+    {
+        return null;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitString(string $data, array $type)
+    {
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitBoolean(bool $data, array $type)
+    {
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitInteger(int $data, array $type)
+    {
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function visitDouble(float $data, array $type)
+    {
+        return $data;
+    }
+
+    /**
+     * @param array $data
+     * @param array $type
+     *
+     * @return array|\ArrayObject
+     */
+    public function visitArray(array $data, array $type)
+    {
+        \array_push($this->dataStack, $data);
+
+        $rs = isset($type['params'][1]) ? new \ArrayObject() : [];
+
+        $isList = isset($type['params'][0]) && !isset($type['params'][1]);
+
+        $elType = $this->getElementType($type);
+        foreach ($data as $k => $v) {
+            try {
+                $v = $this->navigator->accept($v, $elType);
+            } catch (NotAcceptableException $e) {
+                continue;
+            }
+
+            if ($isList) {
+                $rs[] = $v;
+            } else {
+                $rs[$k] = $v;
+            }
+        }
+
+        \array_pop($this->dataStack);
+        return $rs;
     }
 
     /**
@@ -132,10 +224,10 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
     /**
      * {@inheritdoc}
      */
-    public function getResult()
+    public function getResult($data)
     {
         if (false === $this->isJsonApiDocument) {
-            return parent::getResult();
+            return $this->getJsonResult($data);
         }
 
         $root = $this->getRoot();
@@ -144,7 +236,7 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
         if (isset($root['data']) && array_key_exists('errors', $root['data'])) {
             $this->setRoot($root['data']);
 
-            return parent::getResult();
+            return $this->getJsonResult($root['data']);
         }
 
         if ($root) {
@@ -190,7 +282,7 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
             $this->setRoot($root);
         }
 
-        return parent::getResult();
+        return $this->getJsonResult($data);
     }
 
     public function visitProperty(PropertyMetadata $metadata, $data, Context $context)
@@ -202,7 +294,7 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
             return null;
         }
 
-        return parent::visitProperty($metadata, $data, $context);
+        return $this->visitJMSProperty($metadata, $data, $context);
     }
 
     /**
@@ -213,7 +305,7 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
         /** @var JsonApiClassMetadata $jsonApiMetadata */
         $jsonApiMetadata = $this->metadataFactory->getMetadataForClass(get_class($data));
 
-        $rs = parent::endVisitingObject($metadata, $data, $type, $context);
+        $rs = $this->endVisitingJMSObject($metadata, $data, $type, $context);
 
         if ($rs instanceof \ArrayObject) {
             $rs = [];
@@ -339,5 +431,67 @@ class JsonApiSerializationVisitor extends JsonSerializationVisitor
         }
 
         return false;
+    }
+
+    public function getJsonResult($data)
+    {
+        $result = @json_encode($data, $this->options);
+
+        switch (json_last_error()) {
+            case JSON_ERROR_NONE:
+                return $result;
+
+            case JSON_ERROR_UTF8:
+                throw new RuntimeException('Your data could not be encoded because it contains invalid UTF8 characters.');
+
+            default:
+                throw new RuntimeException(sprintf('An error occurred while encoding your data (error code %d).', json_last_error()));
+        }
+    }
+
+    public function visitJMSProperty(PropertyMetadata $metadata, $v): void
+    {
+        try {
+            $v = $this->navigator->accept($v, $metadata->type);
+        } catch (NotAcceptableException $e) {
+            return;
+        }
+
+        if (true === $metadata->skipWhenEmpty && ($v instanceof \ArrayObject || \is_array($v)) && 0 === count($v)) {
+            return;
+        }
+
+        if ($metadata->inline) {
+            if (\is_array($v) || ($v instanceof \ArrayObject)) {
+                // concatenate the two array-like structures
+                // is there anything faster?
+                foreach ($v as $key => $value) {
+                    $this->data[$key] = $value;
+                }
+            }
+        } else {
+            $this->data[$metadata->serializedName] = $v;
+        }
+    }
+
+    /**
+     * @return array|\ArrayObject
+     */
+    public function endVisitingJMSObject(ClassMetadata $metadata, object $data, array $type)
+    {
+        $rs = $this->data;
+        $this->data = \array_pop($this->dataStack);
+
+        if (true !== $metadata->isList && empty($rs)) {
+            return new \ArrayObject();
+        }
+
+        return $rs;
+    }
+
+    public function startVisitingObject(ClassMetadata $metadata, object $data, array $type): void
+    {
+        \array_push($this->dataStack, $this->data);
+        $this->data = true === $metadata->isMap ? new \ArrayObject() : [];
     }
 }
