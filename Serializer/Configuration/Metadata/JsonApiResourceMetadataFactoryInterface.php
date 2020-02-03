@@ -16,5 +16,5 @@ interface JsonApiResourceMetadataFactoryInterface extends MetadataFactoryInterfa
      * @param string $className
      * @return ClassMetadataInterface|null
      */
-    public function getMetadataForClass($className);
+    public function getMetadataForClass(string $className);
 }

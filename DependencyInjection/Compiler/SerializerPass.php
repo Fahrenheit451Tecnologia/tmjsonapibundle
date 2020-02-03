@@ -4,6 +4,7 @@ namespace TM\JsonApiBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 use TM\JsonApiBundle\Request\JsonApiRequest;
 use TM\JsonApiBundle\Serializer\Configuration\Metadata\MetadataFactory;
@@ -17,13 +18,18 @@ class SerializerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $container
-            ->getDefinition('jms_serializer.json_serialization_visitor')
-            ->replaceArgument(0, new Reference('tm.serialization_naming_strategy.json_api'))
-            ->addArgument(new Reference(MetadataFactory::class))
-            ->addArgument(new Reference(JsonApiRequest::class))
-            ->setClass(JsonApiSerializationVisitor::class)
-        ;
+        $container->removeDefinition('jms_serializer.json_serialization_visitor');
+
+        $definition = new Definition(
+            JsonApiSerializationVisitor::class,
+            [
+                new Reference('tm.serialization_naming_strategy.json_api'),
+                new Reference(MetadataFactory::class),
+                new Reference(JsonApiRequest::class)
+            ]
+        );
+
+        $container->setDefinition('jms_serializer.json_serialization_visitor', $definition);
 
         $container->setAlias('serializer', Serializer::class);
         $container->setAlias('fos_rest.serializer', Serializer::class);
