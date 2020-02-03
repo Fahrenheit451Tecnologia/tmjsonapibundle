@@ -2,7 +2,7 @@
 
 namespace TM\JsonApiBundle\Serializer\Handler;
 
-use FOS\RestBundle\Serializer\Normalizer\AbstractExceptionNormalizer;
+use FOS\RestBundle\Util\ExceptionValueMap;
 use JMS\Serializer\Context;
 use JMS\Serializer\JsonSerializationVisitor;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,15 +12,26 @@ use TM\JsonApiBundle\Exception\AbstractJsonApiException;
 use TM\JsonApiBundle\Exception\JsonApiSourceException;
 use TM\JsonApiBundle\Model\Error;
 
-class ExceptionHandler extends AbstractExceptionNormalizer implements SubscribingHandlerInterface
+class ExceptionHandler implements SubscribingHandlerInterface
 {
     /**
-     * @param array|\FOS\RestBundle\Util\ExceptionValueMap $messagesMap
+     * @var ExceptionValueMap
+     */
+    private $messagesMap;
+
+    /**
+     * @var bool
+     */
+    private $debug;
+
+    /**
+     * @param array|ExceptionValueMap $messagesMap
      * @param bool $debug
      */
-    public function __construct($messagesMap, $debug)
+    public function __construct(ExceptionValueMap $messagesMap, bool $debug)
     {
-        parent::__construct($messagesMap, $debug);
+        $this->messagesMap = $messagesMap;
+        $this->debug = $debug;
     }
 
     /**
@@ -123,5 +134,24 @@ class ExceptionHandler extends AbstractExceptionNormalizer implements Subscribin
         }
 
         return 'INTERNAL_SERVER_ERROR';
+    }
+
+    /**
+     * Extracts the exception message.
+     *
+     * @param \Exception $exception
+     * @param int|null   $statusCode
+     *
+     * @return string
+     */
+    protected function getExceptionMessage(\Exception $exception, $statusCode = null)
+    {
+        $showMessage = $this->messagesMap->resolveException($exception);
+
+        if ($showMessage || $this->debug) {
+            return $exception->getMessage();
+        }
+
+        return array_key_exists($statusCode, Response::$statusTexts) ? Response::$statusTexts[$statusCode] : 'error';
     }
 }
