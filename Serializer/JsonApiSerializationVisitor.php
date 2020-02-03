@@ -25,11 +25,6 @@ class JsonApiSerializationVisitor extends AbstractVisitor
     protected $metadataFactory;
 
     /**
-     * @var ExpressionAccessorStrategy
-     */
-    protected $expressionAccessorStrategy;
-
-    /**
      * @var bool
      */
     protected $showVersionInfo;
@@ -59,21 +54,18 @@ class JsonApiSerializationVisitor extends AbstractVisitor
 
     /**
      * @param PropertyNamingStrategyInterface $propertyNamingStrategy
-     * @param ExpressionAccessorStrategy $expressionAccessorStrategy
      * @param MetadataFactoryInterface $metadataFactory
      * @param bool $showVersionInfo
      * @param null $includeMaxDepth
      */
     public function __construct(
         PropertyNamingStrategyInterface $propertyNamingStrategy,
-        ExpressionAccessorStrategy $expressionAccessorStrategy,
         MetadataFactoryInterface $metadataFactory,
         $showVersionInfo = true,
         int $options = JSON_PRESERVE_ZERO_FRACTION,
         $includeMaxDepth = null
     ) {
 
-        $this->expressionAccessorStrategy = $expressionAccessorStrategy;
         $this->metadataFactory = $metadataFactory;
         $this->showVersionInfo = $showVersionInfo;
         $this->includeMaxDepth = $includeMaxDepth;

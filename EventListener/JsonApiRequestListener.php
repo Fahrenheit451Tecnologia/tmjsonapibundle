@@ -4,8 +4,8 @@ namespace TM\JsonApiBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use TM\JsonApiBundle\Exception\ExceptionFactory;
 use TM\JsonApiBundle\Request\Configuration\RequestParameters;
 use TM\JsonApiBundle\Request\JsonApiRequest;
@@ -33,9 +33,9 @@ class JsonApiRequestListener
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -45,9 +45,9 @@ class JsonApiRequestListener
     }
 
     /**
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         if (!$this->jsonApiRequest->hasJsonApiContentType()) {
             return;

@@ -4,7 +4,7 @@ namespace TM\JsonApiBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use TM\JsonApiBundle\Request\Configuration\ConfigurationInterface;
 
 class ControllerListener
@@ -23,10 +23,10 @@ class ControllerListener
     }
 
     /**
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      * @throws \ReflectionException
      */
-    public function onKernelController(FilterControllerEvent $event)
+    public function onKernelController(ControllerEvent $event)
     {
         $controller = $event->getController();
 
